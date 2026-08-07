@@ -1,0 +1,8 @@
+        /*0220*/                   DSETP.LT.AND P0, PT, R2, R4, PT ;   /* 0x000000040200722a */
+        /*02d0*/                   DSETP.GT.AND P0, PT, R2, R4, PT ;   /* 0x000000040200722a */
+        /*0380*/                   DSETP.EQ.AND P0, PT, R2, R4, PT ;   /* 0x000000040200722a */
+        /*0430*/                   DSETP.NE.AND P0, PT, R2, R4, PT ;   /* 0x000000040200722a */
+        /*04e0*/                   DSETP.LE.AND P0, PT, R2, R4, PT ;   /* 0x000000040200722a */
+        /*0590*/                   DSETP.GE.AND P0, PT, R2, R4, PT ;   /* 0x000000040200722a */
+        /*0640*/                   DSETP.NAN.AND P0, PT, R2, R4, PT ;  /* 0x000000040200722a */
+        /*06f0*/                   DSETP.NUM.AND P0, PT, R2, R4, PT ;  /* 0x000000040200722a */

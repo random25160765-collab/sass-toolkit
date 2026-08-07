@@ -1,0 +1,22 @@
+.version 8.4
+.target sm_89
+.address_size 64
+
+.visible .entry test_mufu_fi(.param .u64 output)
+.maxntid 32, 1, 1
+{
+    .reg .f32 fb;
+    .reg .b64 d2;
+
+    ld.param.u64 d2, [output];
+
+    // MUFU_R_FI: cos of float immediate 0.0
+    cos.approx.ftz.f32 fb, 0f00000000;
+    st.f32 [d2], fb;
+
+    // MUFU_R_FI: rcp of float immediate 1.0
+    rcp.approx.ftz.f32 fb, 0f3F800000;
+    st.f32 [d2+4], fb;
+
+    ret;
+}

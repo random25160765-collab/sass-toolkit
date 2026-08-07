@@ -1,0 +1,11 @@
+// test_dmul.ptx - DMUL (double mul)
+.version 8.4
+.target sm_89
+.address_size 64
+.visible .entry test_dmul(.param .u64 i, .param .u64 o) {
+    .reg .f64 fa, fb, fc; .reg .b64 rd1, rd2;
+    ld.param.u64 rd1, [i]; ld.param.u64 rd2, [o];
+    ld.f64 fa, [rd1+0]; ld.f64 fb, [rd1+8];
+    mul.f64 fc, fa, fb; st.f64 [rd2+0], fc;
+    ret;
+}

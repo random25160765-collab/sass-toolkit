@@ -1,0 +1,27 @@
+// test_fswzadd2.ptx - aggressive FSWZADD probe: prmt variants + fadd
+.version 8.4
+.target sm_89
+.address_size 64
+.visible .entry test_fswzadd2(.param .u64 i, .param .u64 o) {
+    .reg .b32 ra, rb, rt, rz, rc; .reg .b64 rd1, rd2;
+    ld.param.u64 rd1, [i]; ld.param.u64 rd2, [o];
+    ld.u32 ra, [rd1+0]; ld.u32 rb, [rd1+4];
+    mov.b32 rz, 0;
+
+    // Case 1: identity prmt (RZ as source) + fadd
+    prmt.b32 rt, rz, rb, 0x3210;
+    add.f32 rc, ra, rt;
+    st.u32 [rd2+0], rc;
+
+    // Case 2: swap bytes + fadd
+    prmt.b32 rt, rz, rb, 0x0123;
+    add.f32 rc, ra, rt;
+    st.u32 [rd2+4], rc;
+
+    // Case 3: prmt auto-identity + fadd
+    prmt.b32 rt, rb, rb, 0x3210;
+    add.f32 rc, ra, rt;
+    st.u32 [rd2+8], rc;
+
+    ret;
+}

@@ -1,0 +1,42 @@
+.version 8.4
+.target sm_89
+.address_size 64
+
+.visible .entry test_f2f(.param .u64 output)
+.maxntid 32, 1, 1
+{
+    .reg .f64 fda, fdb;
+    .reg .f32 fa, fb;
+    .reg .f16 ha, hb;
+    .reg .b32 tmp;
+    .reg .b64 d2;
+
+    ld.param.u64 d2, [output];
+
+    // VAR 1: f32->f64  default round (RN)
+    cvt.f64.f32 fda, fa;
+    st.f64 [d2], fda;
+
+    // VAR 2: f64->f32  round toward zero
+    cvt.rz.f32.f64 fa, fda;
+    st.f32 [d2+8], fa;
+
+    // VAR 3: f32->f16  round toward negative
+    cvt.rm.f16.f32 ha, fa;
+    cvt.f32.f16 fb, ha;
+    st.f32 [d2+16], fb;
+
+    // VAR 4: f16->f32  default round (RN)
+    cvt.f32.f16 fa, ha;
+    st.f32 [d2+20], fa;
+
+    // VAR 5: f32->f64  float imm source
+    cvt.f64.f32 fda, 0f3F800000;
+    st.f64 [d2+32], fda;
+
+    // VAR 6: f64->f32  float imm source
+    cvt.rn.f32.f64 fa, 0d3FF0000000000000;
+    st.f32 [d2+40], fa;
+
+    ret;
+}

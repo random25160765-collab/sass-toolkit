@@ -1,0 +1,25 @@
+// test_dfma.ptx - verify DFMA (double FMA) encoding on SM89
+.version 8.4
+.target sm_89
+.address_size 64
+
+.visible .entry test_dfma(
+    .param .u64 input,
+    .param .u64 output
+)
+{
+    .reg .f64 fa, fb, fc, fd;
+    .reg .b64 rd1, rd2;
+
+    ld.param.u64 rd1, [input];
+    ld.param.u64 rd2, [output];
+    ld.f64 fa, [rd1+0];
+    ld.f64 fb, [rd1+8];
+    ld.f64 fc, [rd1+16];
+
+    // fma.rn.f64
+    fma.rn.f64 fd, fa, fb, fc;
+    st.f64 [rd2+0], fd;
+
+    ret;
+}

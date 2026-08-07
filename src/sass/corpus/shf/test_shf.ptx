@@ -1,0 +1,33 @@
+// test_shf.ptx - verify SHF (funnel shift) encoding on SM89
+.version 8.4
+.target sm_89
+.address_size 64
+
+.visible .entry test_shf(
+    .param .u64 input,
+    .param .u64 output
+)
+{
+    .reg .b32 ra, rb, rc, rd;
+    .reg .b64 rd1, rd2;
+
+    ld.param.u64 rd1, [input];
+    ld.param.u64 rd2, [output];
+    ld.u32 ra, [rd1+0];
+    ld.u32 rb, [rd1+4];
+    ld.u32 rc, [rd1+8];
+
+    // Case 1: left funnel shift, register shift amount
+    shf.l.clamp.b32 rd, ra, rb, rc;
+    st.u32 [rd2+0], rd;
+
+    // Case 2: right funnel shift
+    shf.r.clamp.b32 rd, ra, rb, rc;
+    st.u32 [rd2+4], rd;
+
+    // Case 3: left funnel shift, immediate shift
+    shf.l.clamp.b32 rd, ra, rb, 16;
+    st.u32 [rd2+8], rd;
+
+    ret;
+}

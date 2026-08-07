@@ -1,0 +1,44 @@
+.version 8.4
+.target sm_89
+.address_size 64
+
+.visible .entry test_audit_narrow(
+    .param .u64 input,
+    .param .u64 output
+)
+.maxntid 32, 1, 1
+{
+    .reg .b32 ri, rj, rk, rl, rm, rn;
+    .reg .b64 rd1, rd2;
+    .shared .align 4 .b32 sdata[16];
+    .local .align 4 .b32 ldata[16];
+
+    ld.param.u64 rd1, [input];
+    ld.param.u64 rd2, [output];
+
+    // LDL u8
+    ld.local.u8 ri, [ldata+0];
+    st.global.u32 [rd2+0], ri;
+
+    // STL u8
+    ld.u32 rj, [rd1+0];
+    st.local.u8 [ldata+0], rj;
+
+    // STS u16
+    ld.global.u32 rk, [rd1+4];
+    st.shared.u16 [sdata+0], rk;
+
+    // LDG u8
+    ld.global.u8 rl, [rd1+0];
+    st.global.u32 [rd2+4], rl;
+
+    // LDG.CG u16
+    ld.global.cg.u16 rm, [rd1+2];
+    st.global.u32 [rd2+8], rm;
+
+    // STG.CG u8
+    ld.u32 rn, [rd1+0];
+    st.global.cg.u8 [rd2+12], rn;
+
+    ret;
+}

@@ -1,0 +1,15 @@
+.version 8.5
+.target sm_89
+.address_size 64
+
+.visible .entry test(
+    .param .u64 test_param
+) {
+    .reg .u64 %rd<16>;
+    ld.param.u64 %rd1, [test_param];
+    // texture object
+    .texref .u32 tex_ref;
+    // PTX texture fetch
+    tex.2d.v4.u32.f32 {%rd2,%rd3,%rd4,%rd5}, [tex_ref, {%rd6,%rd7}];
+    ret;
+}

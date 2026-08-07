@@ -1,0 +1,11 @@
+// test_frnd.ptx - FRND (float round to integer)
+.version 8.4
+.target sm_89
+.address_size 64
+.visible .entry test_frnd(.param .u64 i, .param .u64 o) {
+    .reg .f32 fa, fc; .reg .b64 rd1, rd2;
+    ld.param.u64 rd1, [i]; ld.param.u64 rd2, [o];
+    ld.f32 fa, [rd1+0];
+    cvt.rzi.f32.f32 fc, fa; st.f32 [rd2+0], fc;
+    ret;
+}

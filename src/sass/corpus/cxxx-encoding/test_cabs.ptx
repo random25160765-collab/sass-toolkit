@@ -1,0 +1,38 @@
+// test_cabs.ptx - probe cABS/cNEG encoding in SM89 SASS
+.version 8.4
+.target sm_89
+.address_size 64
+
+.visible .entry test_cabs_fadd(
+    .param .u64 input,
+    .param .u64 output
+)
+{
+    .reg .f32 fa, fb, fc, fd, fe;
+    .reg .b64 rd1, rd2;
+
+    ld.param.u64  rd1, [input];
+    ld.param.u64  rd2, [output];
+    ld.f32        fa, [rd1+0];
+    ld.f32        fb, [rd1+4];
+
+    // FMA with abs on 3rd operand:  d = a * b + abs(c)
+    ld.f32        fc, [rd1+8];
+    abs.f32       fe, fc;
+    fma.rn.f32    fd, fa, fb, fe;
+
+    st.f32        [rd2+0], fd;
+
+    // SUB: fa - fb  (= add with cNEG on 2nd operand)
+    sub.f32       fd, fa, fb;
+
+    st.f32        [rd2+4], fd;
+
+    // ADD with abs on src:  abs(b) + a
+    abs.f32       fe, fb;
+    add.f32       fd, fe, fa;
+
+    st.f32        [rd2+8], fd;
+
+    ret;
+}

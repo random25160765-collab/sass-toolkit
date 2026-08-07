@@ -1,0 +1,61 @@
+.version 8.4
+.target sm_89
+.address_size 64
+
+.visible .entry test_audit_modifiers(
+    .param .u64 input,
+    .param .u64 output
+)
+{
+    .reg .f32 fa, fb, fc, fd;
+    .reg .f64 da, db, dc;
+    .reg .b32 ra, rb, rc, rd;
+    .reg .b64 d1, d2;
+
+    ld.param.u64 d1, [input];
+    ld.param.u64 d2, [output];
+    ld.f32 fa, [d1+0];
+    ld.f32 fb, [d1+4];
+    ld.f64 da, [d1+0];
+    ld.f64 db, [d1+8];
+    ld.u32 ra, [d1+0];
+    ld.u32 rb, [d1+4];
+
+    // FADD.FTZ
+    add.rn.ftz.f32 fc, fa, fb;
+    st.global.f32 [d2+0], fc;
+
+    // FMUL.FTZ
+    mul.rn.ftz.f32 fc, fa, fb;
+    st.global.f32 [d2+4], fc;
+
+    // FFMA.FTZ
+    fma.rn.ftz.f32 fc, fa, fb, fd;
+    st.global.f32 [d2+8], fc;
+
+    // DFMA (check if any modifier appears)
+    fma.rn.f64 dc, da, db, db;
+    st.global.f64 [d2+16], dc;
+
+    // I2FP with different rounding: rn default
+    cvt.rn.f32.s32 fa, ra;
+    st.global.f32 [d2+24], fa;
+
+    // I2F with rm rounding
+    cvt.rm.f32.s32 fb, ra;
+    st.global.f32 [d2+28], fb;
+
+    // F2I trunctate
+    cvt.rzi.s32.f32 rc, fa;
+    st.global.u32 [d2+32], rc;
+
+    // SHF with different width
+    shf.l.clamp.b32 rc, ra, rb, rd;
+    st.global.u32 [d2+36], rc;
+
+    // DMUL with rn
+    mul.rn.f64 dc, da, db;
+    st.global.f64 [d2+48], dc;
+
+    ret;
+}

@@ -1,0 +1,24 @@
+// test_dadd.ptx - verify DADD encoding on SM89
+.version 8.4
+.target sm_89
+.address_size 64
+
+.visible .entry test_dadd(
+    .param .u64 input,
+    .param .u64 output
+)
+{
+    .reg .f64 fa, fb, fc;
+    .reg .b64 rd1, rd2;
+
+    ld.param.u64 rd1, [input];
+    ld.param.u64 rd2, [output];
+    ld.f64 fa, [rd1+0];
+    ld.f64 fb, [rd1+8];
+
+    // add.f64 (expect DADD)
+    add.f64 fc, fa, fb;
+    st.f64 [rd2+0], fc;
+
+    ret;
+}

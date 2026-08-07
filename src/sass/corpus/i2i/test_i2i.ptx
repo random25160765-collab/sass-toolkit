@@ -1,0 +1,32 @@
+// test_i2i.ptx - probe I2I encoding on SM89
+.version 8.4
+.target sm_89
+.address_size 64
+
+.visible .entry test_i2i(
+    .param .u64 input,
+    .param .u64 output
+)
+{
+    .reg .b32 ra, rb, rc;
+    .reg .b64 rd1, rd2;
+
+    ld.param.u64 rd1, [input];
+    ld.param.u64 rd2, [output];
+    ld.u32 ra, [rd1+0];
+    ld.u32 rb, [rd1+4];
+
+    // Case 1: cvt.u8.s32 (narrow with saturate)
+    cvt.sat.u8.s32 rc, ra;
+    st.u8 [rd2+0], rc;
+
+    // Case 2: cvt.s32.u8 (widen)
+    cvt.s32.u8 rc, ra;
+    st.u32 [rd2+4], rc;
+
+    // Case 3: cvt.s32.s16
+    cvt.s32.s16 rc, ra;
+    st.u32 [rd2+8], rc;
+
+    ret;
+}

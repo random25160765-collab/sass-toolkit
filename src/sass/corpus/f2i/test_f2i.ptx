@@ -1,0 +1,29 @@
+// test_f2i.ptx - verify F2I conversion variants on SM89
+.version 8.4
+.target sm_89
+.address_size 64
+
+.visible .entry test_f2i(
+    .param .u64 input,
+    .param .u64 output
+)
+{
+    .reg .f32 fa;
+    .reg .u32 ru;
+    .reg .s32 rs;
+    .reg .b64 rd1, rd2;
+
+    ld.param.u64 rd1, [input];
+    ld.param.u64 rd2, [output];
+    ld.f32 fa, [rd1+0];
+
+    // cvt.u32.f32
+    cvt.rzi.u32.f32 ru, fa;
+    st.u32 [rd2+0], ru;
+
+    // cvt.s32.f32
+    cvt.rzi.s32.f32 rs, fa;
+    st.u32 [rd2+4], rs;
+
+    ret;
+}

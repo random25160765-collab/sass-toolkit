@@ -1,0 +1,28 @@
+// test_fadd.ptx - verify FADD cNEG encoding
+.version 8.4
+.target sm_89
+.address_size 64
+
+.visible .entry test_fadd(
+    .param .u64 input,
+    .param .u64 output
+)
+{
+    .reg .f32 fa, fb, fc;
+    .reg .b64 rd1, rd2;
+
+    ld.param.u64 rd1, [input];
+    ld.param.u64 rd2, [output];
+    ld.f32 fa, [rd1+0];
+    ld.f32 fb, [rd1+4];
+
+    // add.f32 (expect FADD)
+    add.f32 fc, fa, fb;
+    st.f32 [rd2+0], fc;
+
+    // sub.f32 (expect FADD with cNEG)
+    sub.f32 fc, fa, fb;
+    st.f32 [rd2+4], fc;
+
+    ret;
+}

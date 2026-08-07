@@ -1,0 +1,27 @@
+.version 8.4
+.target sm_89
+.address_size 64
+
+.visible .entry test_bra_loop(.param .u64 output)
+.maxntid 32, 1, 1
+{
+    .reg .pred %p0;
+    .reg .b32 ri, acc;
+    .reg .b64 d2;
+
+    ld.param.u64 d2, [output];
+    mov.u32 ri, 0;
+    mov.u32 acc, 0;
+
+    // Counted loop: ptxas might use BRA.INC/DEC for this
+LLOOP:
+    setp.lt.u32 %p0, ri, 16;
+    @!%p0 bra LOUT;
+    add.u32 acc, acc, ri;
+    add.u32 ri, ri, 1;
+    bra LLOOP;
+
+LOUT:
+    st.global.u32 [d2], acc;
+    ret;
+}

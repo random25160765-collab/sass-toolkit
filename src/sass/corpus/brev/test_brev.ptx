@@ -1,0 +1,10 @@
+// test_brev.ptx - verify BREV encoding on SM89
+.version 8.4
+.target sm_89
+.address_size 64
+.visible .entry test_brev(.param .u64 i, .param .u64 o) {
+    .reg .b32 ra, rc; .reg .b64 rd1, rd2;
+    ld.param.u64 rd1, [i]; ld.param.u64 rd2, [o];
+    ld.u32 ra, [rd1+0];
+    brev.b32 rc, ra; st.u32 [rd2+0], rc; ret;
+}

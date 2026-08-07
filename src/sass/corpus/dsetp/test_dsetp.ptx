@@ -1,0 +1,62 @@
+.version 8.4
+.target sm_89
+.address_size 64
+
+.visible .entry test_dsetp(
+    .param .u64 input,
+    .param .u64 output
+)
+{
+    .reg .f64 da, db, dc;
+    .reg .pred %p0, %p1, %p2, %p3;
+    .reg .b32 ri;
+    .reg .b64 d1, d2;
+
+    ld.param.u64 d1, [input];
+    ld.param.u64 d2, [output];
+    ld.f64 da, [d1+0];
+    ld.f64 db, [d1+8];
+    mov.u32 ri, 0;
+
+    // DSETP.LT (less than)
+    setp.lt.f64 %p0, da, db;
+    selp.b32 ri, 1, ri, %p0;
+    st.global.u32 [d2+0], ri;
+
+    // DSETP.GT (greater than)
+    setp.gt.f64 %p0, da, db;
+    selp.b32 ri, 1, ri, %p0;
+    st.global.u32 [d2+4], ri;
+
+    // DSETP.EQ (equal)
+    setp.eq.f64 %p0, da, db;
+    selp.b32 ri, 1, ri, %p0;
+    st.global.u32 [d2+8], ri;
+
+    // DSETP.NE (not equal)
+    setp.ne.f64 %p0, da, db;
+    selp.b32 ri, 1, ri, %p0;
+    st.global.u32 [d2+12], ri;
+
+    // DSETP.LE
+    setp.le.f64 %p0, da, db;
+    selp.b32 ri, 1, ri, %p0;
+    st.global.u32 [d2+16], ri;
+
+    // DSETP.GE
+    setp.ge.f64 %p0, da, db;
+    selp.b32 ri, 1, ri, %p0;
+    st.global.u32 [d2+20], ri;
+
+    // DSETP.NAN (NaN check on f64)
+    setp.nan.f64 %p0, da, db;
+    selp.b32 ri, 1, ri, %p0;
+    st.global.u32 [d2+24], ri;
+
+    // DSETP.NUM (numeric check)
+    setp.num.f64 %p0, da, db;
+    selp.b32 ri, 1, ri, %p0;
+    st.global.u32 [d2+28], ri;
+
+    ret;
+}

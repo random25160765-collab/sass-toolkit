@@ -1,0 +1,25 @@
+.version 8.4
+.target sm_89
+.address_size 64
+
+.visible .entry test_fchk(
+    .param .u64 input,
+    .param .u64 output
+)
+{
+    .reg .f32 fa;
+    .reg .pred %p0;
+    .reg .b32 ri, rz;
+    .reg .b64 rd1, rd2;
+
+    ld.param.u64 rd1, [input];
+    ld.param.u64 rd2, [output];
+    ld.f32 fa, [rd1+0];
+    mov.u32 rz, 0;
+
+    setp.nan.f32 %p0, fa, fa;
+    selp.b32 ri, 1, rz, %p0;
+    st.u32 [rd2+0], ri;
+
+    ret;
+}

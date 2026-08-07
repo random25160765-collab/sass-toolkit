@@ -1,0 +1,26 @@
+.version 8.4
+.target sm_89
+.address_size 64
+
+.visible .entry test_ldl(
+    .param .u64 input,
+    .param .u64 output
+)
+{
+    .reg .f32 rf;
+    .reg .b32 ri;
+    .reg .b64 rd1, rd2;
+    .local .align 4 .b32 ldata[8];
+
+    ld.param.u64 rd1, [input];
+    ld.param.u64 rd2, [output];
+    ld.u32 ri, [rd1];
+
+    ld.local.f32 rf, [ldata+0];
+    st.global.f32 [rd2+0], rf;
+
+    ld.local.u32 ri, [ldata+4];
+    st.global.u32 [rd2+4], ri;
+
+    ret;
+}

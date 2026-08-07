@@ -1,0 +1,44 @@
+// test_hmma.ptx - probe HMMA encoding on SM89
+// Verify: m16n8k16 tile, f16 inputs, f16/f32 accumulator
+.version 8.4
+.target sm_89
+.address_size 64
+
+.visible .entry test_hmma(
+    .param .u64 input,
+    .param .u64 output
+)
+{
+    .reg .b64 rd1, rd2;
+    ld.param.u64 rd1, [input];
+    ld.param.u64 rd2, [output];
+
+    // ---- HMMA.16816.F16  (acc=f16, 2 D/C regs, 4 A regs, 2 B regs) ----
+    .reg .b32 r0,  r1,  r2,  r3,  r4,  r5,  r6,  r7;
+    .reg .b32 r8,  r9,  r10, r11, r12, r13, r14, r15;
+
+    // D/C = {r8, r9}    (2 regs, f16 accumulator)
+    // A   = {r0..r3}    (4 regs, ROW layout)
+    // B   = {r4, r5}    (2 regs, COL layout)
+    mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16
+        {r8, r9},
+        {r0, r1, r2, r3},
+        {r4, r5},
+        {r8, r9};
+
+    st.v2.b32 [rd2+0],  {r8, r9};
+
+    // ---- HMMA.16816.F32  (acc=f32, 4 D/C regs) ----
+    // D/C = {r12..r15}  (4 regs, f32 accumulator)
+    // A   = {r0..r3}    (4 regs, same as F16 case)
+    // B   = {r4, r5}     (2 regs, same as F16 case)
+    mma.sync.aligned.m16n8k16.row.col.f32.f16.f16.f32
+        {r12, r13, r14, r15},
+        {r0, r1, r2, r3},
+        {r4, r5},
+        {r12, r13, r14, r15};
+
+    st.v4.b32 [rd2+32], {r12, r13, r14, r15};
+
+    ret;
+}

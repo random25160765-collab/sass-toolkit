@@ -1,0 +1,24 @@
+.version 8.4
+.target sm_89
+.address_size 64
+
+.visible .entry test_sts(
+    .param .u64 input,
+    .param .u64 output
+)
+{
+    .reg .f32 rf;
+    .reg .b32 ri;
+    .reg .b64 rd1, rd2;
+    .shared .align 4 .b32 sdata[64];
+
+    ld.param.u64 rd1, [input];
+    ld.param.u64 rd2, [output];
+    ld.global.f32 rf, [rd1];
+    ld.global.u32 ri, [rd1+4];
+
+    st.shared.f32 [sdata+0], rf;
+    st.shared.u32 [sdata+4], ri;
+
+    ret;
+}

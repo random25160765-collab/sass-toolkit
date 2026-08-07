@@ -1,0 +1,29 @@
+// test_ldg.ptx - probe LDG encoding on SM89
+.version 8.4
+.target sm_89
+.address_size 64
+
+.visible .entry test_ldg(
+    .param .u64 input,
+    .param .u64 output
+)
+{
+    // float rd = *((f32*)input + 2)
+    .reg .f32 rf;
+    .reg .b32 ri;
+    .reg .b64 rd1, rd2, rtmp;
+    .reg .pred %p0;
+
+    ld.param.u64 rd1, [input];
+    ld.param.u64 rd2, [output];
+
+    // Case 1: ld.global.f32 (reg base + constant offset)
+    ld.global.f32 rf, [rd1+8];
+    st.f32 [rd2+0], rf;
+
+    // Case 2: ld.global.u32
+    ld.global.u32 ri, [rd1+0];
+    st.u32 [rd2+4], ri;
+
+    ret;
+}

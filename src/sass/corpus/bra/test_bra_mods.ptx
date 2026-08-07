@@ -1,0 +1,31 @@
+.version 8.4
+.target sm_89
+.address_size 64
+
+.visible .entry test_bra_mods(.param .u64 output)
+.maxntid 64, 1, 1
+{
+    .reg .pred %p0;
+    .reg .b32 ri, lid;
+    .reg .b64 d2;
+
+    ld.param.u64 d2, [output];
+    mov.u32 ri, 0;
+
+    // Trigger DIV (thread-divergent branch via laneid)
+    mov.u32 lid, %laneid;
+    setp.ne.u32 %p0, lid, 0;
+    @%p0 bra LDIVERGE;
+    st.global.u32 [d2+0], ri;
+
+LDIVERGE:
+    // CONV: reconvergence point after divergent branch
+    st.global.u32 [d2+4], ri;
+
+    // Unconditional branch
+    bra LEND;
+    st.global.u32 [d2+8], ri;
+
+LEND:
+    ret;
+}

@@ -1,0 +1,16 @@
+# Rust build artifacts
+/target
+
+# Generated lift outputs (scratch dir)
+/output
+
+# Editor / OS
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs / misc
+*.log

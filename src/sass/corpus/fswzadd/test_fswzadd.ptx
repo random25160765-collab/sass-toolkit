@@ -1,0 +1,13 @@
+// test_fswzadd.ptx - probe FSWZADD (prmt + fadd fusion) on SM89
+.version 8.4
+.target sm_89
+.address_size 64
+.visible .entry test_fswzadd(.param .u64 i, .param .u64 o) {
+    .reg .b32 ra, rb, rt, rc; .reg .b64 rd1, rd2;
+    ld.param.u64 rd1, [i]; ld.param.u64 rd2, [o];
+    ld.u32 ra, [rd1+0]; ld.u32 rb, [rd1+4];
+    // prmt (byte permute) + add.f32 - may fuse into FSWZADD
+    prmt.b32 rt, rb, rb, 0x3210;
+    add.f32 rc, ra, rt;
+    st.u32 [rd2+0], rc; ret;
+}

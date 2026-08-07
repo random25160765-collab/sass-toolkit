@@ -1,0 +1,46 @@
+.version 8.4
+.target sm_89
+.address_size 64
+
+.visible .entry test_red(.param .u64 input, .param .u64 output)
+.maxntid 32, 1, 1
+{
+    .reg .b32 ri;
+    .reg .s64 si;
+    .reg .b64 d1, d2;
+    .reg .f32 fa;
+
+    ld.param.u64 d1, [input];
+    ld.param.u64 d2, [output];
+    ld.u32 ri, [d1];
+
+    // OP: ADD, type: u32
+    red.global.add.u32 [d2], ri;
+
+    // OP: MIN, type: s32
+    red.global.min.s32 [d2+4], ri;
+
+    // OP: MAX, type: u32
+    red.global.max.u32 [d2+8], ri;
+
+    // OP: AND, type: b32
+    red.global.and.b32 [d2+12], ri;
+
+    // OP: OR, type: b32
+    red.global.or.b32 [d2+16], ri;
+
+    // OP: XOR, type: b32
+    red.global.xor.b32 [d2+20], ri;
+
+    // OP: INC, type: u32
+    red.global.inc.u32 [d2+24], ri;
+
+    // OP: DEC, type: u32
+    red.global.dec.u32 [d2+28], ri;
+
+    // OP: ADD, type: f32
+    ld.f32 fa, [d1];
+    red.global.add.f32 [d2+32], fa;
+
+    ret;
+}

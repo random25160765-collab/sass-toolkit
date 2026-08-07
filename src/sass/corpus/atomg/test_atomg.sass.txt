@@ -1,0 +1,8 @@
+        /*01c0*/                   ATOMG.E.ADD.STRONG.GPU PT, R6, [R4.64], R3 ;   /* 0x00000003040679a8 */
+        /*02e0*/                   ATOMG.E.MIN.STRONG.GPU PT, R6, [R4.64], R3 ;   /* 0x00000003040679a8 */
+        /*0400*/                   ATOMG.E.MAX.STRONG.GPU PT, R6, [R4.64], R3 ;   /* 0x00000003040679a8 */
+        /*0520*/                   ATOMG.E.AND.STRONG.GPU PT, R6, [R4.64], R3 ;   /* 0x00000003040679a8 */
+        /*0640*/                   ATOMG.E.OR.STRONG.GPU PT, R6, [R4.64], R3 ;    /* 0x00000003040679a8 */
+        /*0760*/                   ATOMG.E.XOR.STRONG.GPU PT, R6, [R4.64], R3 ;   /* 0x00000003040679a8 */
+        /*0880*/                   ATOMG.E.EXCH.STRONG.GPU PT, R6, [R4.64], R3 ;  /* 0x00000003040679a8 */
+        /*09a0*/                   ATOMG.E.DEC.STRONG.GPU PT, R4, [R4.64], R3 ;   /* 0x00000003040479a8 */

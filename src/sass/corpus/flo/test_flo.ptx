@@ -1,0 +1,27 @@
+// test_flo.ptx - probe FLO encoding on SM89
+.version 8.4
+.target sm_89
+.address_size 64
+
+.visible .entry test_flo(
+    .param .u64 input,
+    .param .u64 output
+)
+{
+    .reg .b32 ra, rb, rc;
+    .reg .b64 rd1, rd2;
+
+    ld.param.u64 rd1, [input];
+    ld.param.u64 rd2, [output];
+    ld.u32 ra, [rd1+0];
+
+    // Case 1: find leading one of register
+    bfind.u32 rc, ra;
+    st.u32 [rd2+0], rc;
+
+    // Case 2: find leading one of immediate
+    bfind.u32 rc, 0x100;
+    st.u32 [rd2+4], rc;
+
+    ret;
+}

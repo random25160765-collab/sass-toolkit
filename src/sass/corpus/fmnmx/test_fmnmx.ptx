@@ -1,0 +1,30 @@
+.version 8.4
+.target sm_89
+.address_size 64
+
+.visible .entry test_fmnmx(.param .u64 output)
+.maxntid 32, 1, 1
+{
+    .reg .f32 fa, fb, fd;
+    .reg .b64 d2;
+
+    ld.param.u64 d2, [output];
+
+    // VAR 1: min (predicate = PT/true -> min)
+    min.f32 fd, fa, fb;
+    st.f32 [d2], fd;
+
+    // VAR 2: max (using setp to force max path)
+    max.f32 fd, fa, fb;
+    st.f32 [d2+4], fd;
+
+    // VAR 3: min with float imm source
+    min.f32 fd, fa, 0f3F800000;
+    st.f32 [d2+8], fd;
+
+    // VAR 4: max with float imm source
+    max.f32 fd, fa, 0f3F800000;
+    st.f32 [d2+12], fd;
+
+    ret;
+}

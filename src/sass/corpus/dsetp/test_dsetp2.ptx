@@ -1,0 +1,32 @@
+.version 8.4
+.target sm_89
+.address_size 64
+
+.visible .entry test_dsetp2(
+    .param .u64 input,
+    .param .u64 output
+)
+{
+    .reg .f64 da, db;
+    .reg .pred %p0, %p1;
+    .reg .b32 ri;
+    .reg .b64 d1, d2;
+
+    ld.param.u64 d1, [input];
+    ld.param.u64 d2, [output];
+    ld.f64 da, [d1+0];
+    ld.f64 db, [d1+8];
+    mov.u32 ri, 0;
+
+    // DSETP.LT.OR (OR chain)
+    setp.lt.f64 %p0|%p1, da, db;
+    selp.b32 ri, 1, ri, %p0;
+    st.global.u32 [d2+0], ri;
+
+    // DSETP with ne (XOR chain)
+    setp.ne.f64 %p0|%p1, da, db;
+    selp.b32 ri, 1, ri, %p0;
+    st.global.u32 [d2+4], ri;
+
+    ret;
+}

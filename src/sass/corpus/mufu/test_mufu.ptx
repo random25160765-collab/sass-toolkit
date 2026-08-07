@@ -1,0 +1,48 @@
+.version 8.4
+.target sm_89
+.address_size 64
+
+.visible .entry test_mufu(.param .u64 input, .param .u64 output)
+.maxntid 32, 1, 1
+{
+    .reg .f32 fa, fb;
+    .reg .b64 d1, d2;
+
+    ld.param.u64 d1, [input];
+    ld.param.u64 d2, [output];
+    ld.f32 fa, [d1];
+
+    // VAR 1: RCP
+    rcp.approx.ftz.f32 fb, fa;
+    st.f32 [d2+0], fb;
+
+    // VAR 2: RSQ
+    rsqrt.approx.ftz.f32 fb, fa;
+    st.f32 [d2+4], fb;
+
+    // VAR 3: COS
+    cos.approx.ftz.f32 fb, fa;
+    st.f32 [d2+8], fb;
+
+    // VAR 4: SIN
+    sin.approx.ftz.f32 fb, fa;
+    st.f32 [d2+12], fb;
+
+    // VAR 5: EX2
+    ex2.approx.ftz.f32 fb, fa;
+    st.f32 [d2+16], fb;
+
+    // VAR 6: LG2
+    lg2.approx.ftz.f32 fb, fa;
+    st.f32 [d2+20], fb;
+
+    // VAR 7: TANH
+    tanh.approx.f32 fb, fa;
+    st.f32 [d2+24], fb;
+
+    // VAR 8: SQRT
+    sqrt.approx.ftz.f32 fb, fa;
+    st.f32 [d2+28], fb;
+
+    ret;
+}

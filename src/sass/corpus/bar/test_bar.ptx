@@ -1,0 +1,22 @@
+.version 8.4
+.target sm_89
+.address_size 64
+
+.visible .entry test_bar(
+    .param .u64 input,
+    .param .u64 output
+)
+.maxntid 32, 1, 1
+{
+    .reg .b32 ri;
+    .reg .b64 rd1, rd2;
+
+    ld.param.u64 rd1, [input];
+    ld.param.u64 rd2, [output];
+    ld.u32 ri, [rd1];
+
+    bar.sync 0;
+    st.u32 [rd2+0], ri;
+
+    ret;
+}

@@ -1,0 +1,45 @@
+[package]
+name = "sass_toolkit"
+version = "0.1.0"
+edition = "2021"
+description = "Standalone SASS → PTX lifter, isolated from hetGPU/ptx"
+
+[dependencies]
+quick-error = "1.2"
+thiserror = "1.0"
+bit-vec = "0.8"
+half = "1.6"
+bitflags = "1.2"
+rustc-hash = "2.0.0"
+strum = "0.26"
+strum_macros = "0.26"
+tempfile = "3"
+which = "4.4"
+libc = "0.2"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+sha2 = "0.10"
+# CUBIN/ELF parsing and DWARF debug info
+object = { version = "0.32", features = ["read", "write", "elf"] }
+gimli = "0.28"
+phf = { version = "0.11", features = ["macros"] }
+ouroboros = "0.18"
+regex = "1.0"
+base64 = "0.22"
+rand = "0.8"
+microlp = "0.2"
+petgraph = "0.6"
+unwrap_or = "1.0"
+smallvec = "1.13"
+clap = { version = "4.5", features = ["derive"] }
+
+[dev-dependencies]
+tempfile = "3"
+paste = "1.0"
+pretty_assertions = "1.4"
+int-enum = "1.1"
+z3 = "0.12"
+
+[[bin]]
+name = "sass_lift"
+path = "src/bin/sass_lift.rs"

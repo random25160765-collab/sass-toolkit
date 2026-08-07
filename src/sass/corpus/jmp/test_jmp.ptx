@@ -1,0 +1,16 @@
+.version 8.4
+.target sm_89
+.address_size 64
+
+.visible .entry test_jmp(.param .u64 output)
+.maxntid 32, 1, 1
+{
+    .reg .b32 ri;
+    .reg .b64 d2, addr;
+
+    ld.param.u64 d2, [output];
+    mov.u32 ri, 0;
+    st.global.u32 [d2], ri;
+
+    ret;
+}

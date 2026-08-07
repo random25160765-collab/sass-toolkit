@@ -1,0 +1,13 @@
+// test_vote.ptx - verify VOTE encoding on SM89
+.version 8.4
+.target sm_89
+.address_size 64
+.visible .entry test_vote(.param .u64 i, .param .u64 o) {
+    .reg .pred p0, p1; .reg .b32 rm, ra; .reg .b64 rd1, rd2;
+    ld.param.u64 rd1, [i]; ld.param.u64 rd2, [o];
+    ld.u32 ra, [rd1+0];
+    setp.ne.u32 p0, ra, 0;
+    vote.sync.all.pred p1, p0, 0xffffffff;
+    @p1 mov.b32 rm, 1; @!p1 mov.b32 rm, 0;
+    st.b32 [rd2+0], rm; ret;
+}

@@ -1,0 +1,33 @@
+// test_fsetp.ptx - verify FSETP encoding on SM89
+.version 8.4
+.target sm_89
+.address_size 64
+
+.visible .entry test_fsetp(
+    .param .u64 input,
+    .param .u64 output
+)
+{
+    .reg .f32 fa, fb;
+    .reg .pred p0, p1, p2, p3;
+    .reg .b32 rd;
+    .reg .b64 rd1, rd2;
+
+    ld.param.u64 rd1, [input];
+    ld.param.u64 rd2, [output];
+    ld.f32 fa, [rd1+0];
+    ld.f32 fb, [rd1+4];
+
+    // setp.lt.f32
+    setp.lt.f32 p0, fa, fb;
+    @p0 mov.b32 rd, 1;
+    st.b32 [rd2+0], rd;
+
+    // setp.f32 dual output
+    setp.lt.f32 p1|p2, fa, fb;
+    @p1 mov.b32 rd, 2;
+    @p2 mov.b32 rd, 3;
+    st.b32 [rd2+4], rd;
+
+    ret;
+}

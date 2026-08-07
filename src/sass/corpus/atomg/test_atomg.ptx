@@ -1,0 +1,48 @@
+.version 8.4
+.target sm_89
+.address_size 64
+
+.visible .entry test_atomg(.param .u64 input, .param .u64 output)
+.maxntid 32, 1, 1
+{
+    .reg .b32 ri, rj, rold;
+    .reg .b64 d1, d2;
+
+    ld.param.u64 d1, [input];
+    ld.param.u64 d2, [output];
+    ld.u32 ri, [d1];
+
+    // ADD
+    atom.global.add.u32 rold, [d2], ri;
+    st.global.u32 [d2+0], rold;
+
+    // MIN
+    atom.global.min.u32 rold, [d2+4], ri;
+    st.global.u32 [d2+4], rold;
+
+    // MAX
+    atom.global.max.u32 rold, [d2+8], ri;
+    st.global.u32 [d2+8], rold;
+
+    // AND
+    atom.global.and.b32 rold, [d2+12], ri;
+    st.global.u32 [d2+12], rold;
+
+    // OR
+    atom.global.or.b32 rold, [d2+16], ri;
+    st.global.u32 [d2+16], rold;
+
+    // XOR
+    atom.global.xor.b32 rold, [d2+20], ri;
+    st.global.u32 [d2+20], rold;
+
+    // EXCH (exchange)
+    atom.global.exch.b32 rold, [d2+24], ri;
+    st.global.u32 [d2+24], rold;
+
+    // DEC
+    atom.global.dec.u32 rold, [d2+28], ri;
+    st.global.u32 [d2+28], rold;
+
+    ret;
+}

@@ -1,0 +1,47 @@
+.version 8.4
+.target sm_89
+.address_size 64
+
+.visible .entry test_ffma(.param .u64 output)
+.maxntid 32, 1, 1
+{
+    .reg .f32 fa, fb, fc, fd, ft;
+    .reg .b64 d2;
+
+    ld.param.u64 d2, [output];
+
+    // VAR 1: default fma (RN)
+    fma.rn.f32 fd, fa, fb, fc;
+    st.f32 [d2], fd;
+
+    // VAR 2: FTZ + RN
+    fma.rn.ftz.f32 fd, fa, fb, fc;
+    st.f32 [d2+4], fd;
+
+    // VAR 3: RM rounding
+    fma.rm.f32 fd, fa, fb, fc;
+    st.f32 [d2+8], fd;
+
+    // VAR 4: RP rounding
+    fma.rp.f32 fd, fa, fb, fc;
+    st.f32 [d2+12], fd;
+
+    // VAR 5: RZ rounding
+    fma.rz.f32 fd, fa, fb, fc;
+    st.f32 [d2+16], fd;
+
+    // VAR 6: float imm addend (FI in position 3)
+    fma.rn.f32 fd, fa, fb, 0f3F800000;
+    st.f32 [d2+20], fd;
+
+    // VAR 7: float imm multiplier (FI in position 1)
+    fma.rn.f32 fd, fa, 0f3F800000, fc;
+    st.f32 [d2+24], fd;
+
+    // VAR 8: cNEG on addend (pre-negated)
+    neg.f32 ft, fc;
+    fma.rn.f32 fd, fa, fb, ft;
+    st.f32 [d2+28], fd;
+
+    ret;
+}

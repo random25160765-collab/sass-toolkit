@@ -1,0 +1,12 @@
+// test_fmnmx2.ptx - probe min/max FMNMX encoding
+.version 8.4
+.target sm_89
+.address_size 64
+.visible .entry test_fmnmx2(.param .u64 i, .param .u64 o) {
+    .reg .f32 fa, fb, fmx, fmn; .reg .b64 rd1, rd2;
+    ld.param.u64 rd1, [i]; ld.param.u64 rd2, [o];
+    ld.f32 fa, [rd1+0]; ld.f32 fb, [rd1+4];
+    max.f32 fmx, fa, fb; st.f32 [rd2+0], fmx;
+    min.f32 fmn, fa, fb; st.f32 [rd2+4], fmn;
+    ret;
+}

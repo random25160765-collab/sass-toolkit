@@ -1,0 +1,15 @@
+// test_i2f_vs_i2fp.ptx - probe I2F vs I2FP: all rounding modes
+.version 8.4
+.target sm_89
+.address_size 64
+.visible .entry test_i2f_vs_i2fp(.param .u64 i, .param .u64 o) {
+    .reg .s32 rs; .reg .u32 ru; .reg .f32 fa, fb, fc, fd; .reg .b64 rd1, rd2;
+    ld.param.u64 rd1, [i]; ld.param.u64 rd2, [o];
+    ld.s32 rs, [rd1+0]; ld.u32 ru, [rd1+4];
+
+    cvt.rn.f32.s32 fa, rs; st.f32 [rd2+0], fa;   // round nearest
+    cvt.rn.f32.u32 fb, ru; st.f32 [rd2+4], fb;
+    cvt.rm.f32.s32 fc, rs; st.f32 [rd2+8], fc;   // round -inf
+    cvt.rp.f32.s32 fd, rs; st.f32 [rd2+12], fd;  // round +inf
+    ret;
+}

@@ -1,0 +1,24 @@
+.version 8.4
+.target sm_89
+.address_size 64
+
+.visible .entry test_red_types(.param .u64 input, .param .u64 output)
+.maxntid 32, 1, 1
+{
+    .reg .b64 dl;
+    .reg .f64 fa;
+    .reg .b64 d1, d2;
+
+    ld.param.u64 d1, [input];
+    ld.param.u64 d2, [output];
+    ld.u64 dl, [d1];
+
+    // TYPE: 64 (.u64)
+    red.global.add.u64 [d2], dl;
+
+    // TYPE: F64 (.f64)
+    ld.f64 fa, [d1];
+    red.global.add.f64 [d2+8], fa;
+
+    ret;
+}

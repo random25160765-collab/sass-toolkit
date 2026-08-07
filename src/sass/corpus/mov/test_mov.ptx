@@ -1,0 +1,24 @@
+// test_mov.ptx - verify MOV encoding on SM89
+.version 8.4
+.target sm_89
+.address_size 64
+
+.visible .entry test_mov(
+    .param .u64 output
+)
+{
+    .reg .b32 ra, rb, rc;
+    .reg .b64 rd2;
+
+    ld.param.u64 rd2, [output];
+
+    // mov imm
+    mov.b32 rc, 0;
+    st.u32 [rd2+0], rc;
+
+    // mov hi+lo immediate
+    mov.b32 rc, 0x1234000A;
+    st.u32 [rd2+4], rc;
+
+    ret;
+}

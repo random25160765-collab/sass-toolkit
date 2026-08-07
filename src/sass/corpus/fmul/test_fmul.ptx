@@ -1,0 +1,30 @@
+// test_fmul.ptx - verify FMUL encoding on SM89
+.version 8.4
+.target sm_89
+.address_size 64
+
+.visible .entry test_fmul(
+    .param .u64 input,
+    .param .u64 output
+)
+{
+    .reg .f32 fa, fb, fc;
+    .reg .b64 rd1, rd2;
+
+    ld.param.u64 rd1, [input];
+    ld.param.u64 rd2, [output];
+    ld.f32 fa, [rd1+0];
+    ld.f32 fb, [rd1+4];
+
+    // mul.f32 (expect FMUL)
+    mul.f32 fc, fa, fb;
+    st.f32 [rd2+0], fc;
+
+    // mul.f32 with one negative operand
+    mul.f32 fc, fa, fb;
+    neg.f32 fa, fa;
+    mul.f32 fc, fa, fb;
+    st.f32 [rd2+4], fc;
+
+    ret;
+}
