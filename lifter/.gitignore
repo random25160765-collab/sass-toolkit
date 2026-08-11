@@ -1,0 +1,24 @@
+# Rust build artifacts
+/target
+
+# Generated lift outputs (scratch dir)
+/output
+
+# Symlinks to related projects in ~
+/CuAssembler
+/sasskit
+/gpuocelot
+/blackwell-isa
+/ptxNinja
+/cubit
+
+# Editor / OS
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs / misc
+*.log

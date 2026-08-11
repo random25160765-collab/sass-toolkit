@@ -1,8 +1,5 @@
-# Rust build artifacts
-/target
-
-# Generated lift outputs (scratch dir)
-/output
+# Symlinks to related projects in ~
+reference/
 
 # Editor / OS
 .vscode/
